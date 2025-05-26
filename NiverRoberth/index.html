@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Feliz Aniversário, Leonardo!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #0a3d80);
+      text-align: center;
+      padding: 50px;
+      margin: 0;
+      overflow-x: hidden; /* evita scroll horizontal */
+      position: relative;
+      height: 100vh;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 42px;
+      color: #00142e;
+    }
+
+    #game {
+      margin-top: 50px;
+      position: relative;
+      height: 80vh; /* espaço para o balão se mover */
+    }
+
+    #balloon {
+      width: 15vw;
+      max-width: 80px;
+      position: absolute;
+      top: 100px;
+      cursor: pointer;
+      transition: top 0.3s, left 0.3s;
+    }
+
+    #score {
+      font-size: 22px;
+      margin-top: 20px;
+      color: #000000;
+    }
+
+    /* Animação de explosão */
+    @keyframes explode {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    .explode {
+      animation: explode 0.4s ease-out forwards;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Hoje é o dia do Leonardo! 🎉</h1>
+
+  <p>Antes de ver sua surpresa... que tal brincar um pouco? 🎈</p>
+
+  <div id="game">
+    <h2>Mini Jogo: Estoure os Leonardos 🎈</h2>
+    <p>Toque no Léo para ganhar pontos!</p>
+    <img id="balloon" src="balao leo.png" alt="Balão" onclick="popBalloon()" />
+    <div id="score">Pontos: 0 / 10</div>
+  </div>
+
+  <script>
+    let score = 0;
+    let clicks = 0;
+    const maxClicks = 10;
+    const balloon = document.getElementById("balloon");
+    const scoreText = document.getElementById("score");
+
+    function popBalloon() {
+      if (clicks >= maxClicks) return;
+
+      balloon.classList.add("explode");
+
+      setTimeout(() => {
+        balloon.classList.remove("explode");
+
+        score++;
+        clicks++;
+        scoreText.textContent = `Pontos: ${score} / ${maxClicks}`;
+
+        if (clicks === maxClicks) {
+          balloon.style.display = "none";
+
+          const endMsg = document.createElement("p");
+          endMsg.textContent = `Fim de jogo! Preparado para sua surpresa? 🎁`;
+          endMsg.style.fontSize = "22px";
+          endMsg.style.marginTop = "20px";
+          endMsg.style.color = "#004d40";
+          document.getElementById("game").appendChild(endMsg);
+
+          setTimeout(() => {
+            window.location.href = "surpresa.html";
+          }, 3000);
+        } else {
+          moveBalloon();
+        }
+      }, 400);
+    }
+
+    function moveBalloon() {
+      const balloonWidth = balloon.offsetWidth;
+      const balloonHeight = balloon.offsetHeight;
+
+      const maxX = window.innerWidth - balloonWidth;
+      const maxY = window.innerHeight - balloonHeight - 100; // deixa um espaço pra não ir até embaixo
+
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
+      balloon.style.left = `${x}px`;
+      balloon.style.top = `${y}px`;
+    }
+
+    // Posiciona o balão assim que a página carrega
+    window.onload = moveBalloon;
+
+    // Para garantir que o balão se reposicione ao redimensionar a tela
+    window.onresize = () => {
+      if (clicks < maxClicks) moveBalloon();
+    };
+  </script>
+
+</body>
+</html>
